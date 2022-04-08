@@ -3,6 +3,7 @@ package com.zensar;
 public class Addition {
 	
 	public Integer add(Integer a,Integer b) {
+		System.out.println("this is add method");
 		return a+b;
 	}
 	public Integer sub(Integer a,Integer b) {
