@@ -1,9 +1,9 @@
-package com.zensar.olxloginapplication;
+package com.zensar.olxapplication;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.zensar.olxloginapplication.entity.UserInformation;
+import com.zensar.olxapplication.entity.UserInformation;
 
 @SpringBootApplication
 public class OlxApplication {

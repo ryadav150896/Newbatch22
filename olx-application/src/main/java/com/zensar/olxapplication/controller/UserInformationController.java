@@ -1,8 +1,9 @@
-package com.zensar.olxloginapplication.controller;
+package com.zensar.olxapplication.controller;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,31 +17,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.zensar.olxloginapplication.entity.UserInformation;
+import com.zensar.olxapplication.entity.UserInformation;
+import com.zensar.olxapplication.service.UserInformationService;
 
 @RestController
 public class UserInformationController {
-
-	static List<UserInformation> userInformationList = new ArrayList<UserInformation>();
-	/*
-	 * static {
-	 * 
-	 * userInformationList.add( new UserInformation(1, "ravi", "yadav", "raviy",
-	 * "ravi@07", "iraviyadav15@gmail.com", "8770906899")); userInformationList
-	 * .add(new UserInformation(2, "aman", "jain", "groot", "groot@07",
-	 * "jainaman15@gmail.com", "8770908764")); }
-	 */
+	@Autowired
+	private UserInformationService userInformationService;
 
 	// get the user
 	// http:localhost:5050/user
 	@GetMapping(value = "/user", produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
 	// @RequestMapping(value = "/user", method = RequestMethod.GET)
 	public List<UserInformation> getUserInformation(@RequestHeader("auth-token") String token) {
-		if (token.equals("ry66540")) {
-			return userInformationList;
-
-		}
-		return null;
+		return userInformationService.getUserInformation(token);
 	}
 
 	// add new user
@@ -49,26 +39,22 @@ public class UserInformationController {
 			MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_XML_VALUE,
 					MediaType.APPLICATION_JSON_VALUE })
 	public UserInformation resgisterUser(@RequestBody UserInformation userData) {
-		userInformationList.add(userData);
-		return userData;
+		return userInformationService.resgisterUser(userData);
 	}
 
-	
 	// to delete existing user
 	// http:localhost:5050/user/logout
 	@DeleteMapping("/user/logout")
 	public ResponseEntity<String> logoutUser(@RequestHeader("auth-token") String token) {
+		String logoutResult = userInformationService.logoutUser(token);
 
-		for (UserInformation user : userInformationList) {
+		if (logoutResult.equals("logout successfuly")) {
+			return new ResponseEntity<String>("logout successfuly", HttpStatus.ACCEPTED);
 
-			if (token.equals("ry66540")) {
-				userInformationList.remove(user);
+		} else {
 
-			}
-			return new ResponseEntity<String>("failed to logout", HttpStatus.EXPECTATION_FAILED);
+			return new ResponseEntity<String>("failed to logout", HttpStatus.BAD_REQUEST);
+
 		}
-		return new ResponseEntity<String>("logout successfuly", HttpStatus.ACCEPTED);
-
 	}
-
 }

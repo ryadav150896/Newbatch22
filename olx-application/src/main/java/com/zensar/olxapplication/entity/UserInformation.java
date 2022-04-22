@@ -1,4 +1,4 @@
-package com.zensar.olxloginapplication.entity;
+package com.zensar.olxapplication.entity;
 
 
 
