@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -39,7 +41,7 @@ public class StockController {
 	// read all stocks
 	// @GetMapping("/stocks")
 	//@ResponseBody
-	@RequestMapping(method = RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.GET, produces= {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_VALUE})
 	public List<Stock> getAllStocks() {
 
 		return stocks;
@@ -57,7 +59,7 @@ public class StockController {
 	 * if (stock.getStockId() == stockId) { return stock; } } return null; }
 	 */
 
-	@RequestMapping(value = "/{stockId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{stockId}", method = RequestMethod.GET, produces= {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_VALUE})
 	public Stock getStock(@PathVariable long stockId) {
 
 		Optional<Stock> stock1=stocks.stream().filter(stock->stock.getStockId()==stockId).findAny();
@@ -70,8 +72,8 @@ public class StockController {
 		
 
 	// create new stock
-	// @PostMapping("/stocks")
-	@RequestMapping(method = RequestMethod.POST)
+	@PostMapping(produces= {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}, consumes= {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
+	//@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<Stock> createStock(@RequestBody Stock stock, @RequestHeader("auth-token") String token) {
 		if (token.equals("ry43099")) {
 			stocks.add(stock);
@@ -95,12 +97,12 @@ public class StockController {
 	 * if(stock.getStockId()==id) { return stock; } } return null; }
 	 */
 	// delete specific stock
-	@DeleteMapping("/{stockId}")
+	@DeleteMapping(value="/{stockId}", produces= {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_VALUE})
 	public String deleteStock(@PathVariable long stockId) {
 
 		for (Stock stock : stocks) {
 
-			if (stock.getStockId() == stockId) {
+			if (stock.getStockId() == stockId ) {
 				stocks.remove(stock);
 
 				return "stock id deleted " + stockId;
@@ -109,7 +111,7 @@ public class StockController {
 		return "sorry, stockId is not present";
 	}
 
-	@PutMapping("/{stockId}")
+	@PutMapping(value="/{stockId}", produces= {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_VALUE})
 	public Stock updateStocks(@PathVariable int stockId, @RequestBody Stock stock) {
 
 		Stock availablestock = getStock(stockId);
